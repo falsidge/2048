@@ -5,6 +5,7 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.actuator       = new Actuator;
   this.alphabet = "abcdefghijklmnopqrstuvwxyz"
   this.freq = [4467, 5629, 7175, 8574, 12829, 13490, 14592, 15915, 18496, 18659, 19541, 21909, 23210, 25424, 28225, 29518, 29602, 32645, 35028, 37409, 39290, 39756, 40441, 40630, 42235, 42485]
+  this.points = {"e":1,"a":1,"i":1,"o":1,"n":1,"r":1,"t":1,"l":1,"s":1,"u":1,"d":2,"g":2,"b":3,"c":3,"m":3,"p":3,"f":4,"h":4,"v":4,"w":4,"y":4,"k":5,"j":8,"x":8,"q":10,"z":10}
 
   this.startTiles     = 5;
 
@@ -84,7 +85,7 @@ GameManager.prototype.addRandomTile = function () {
       }
     }
     value = this.alphabet[i];
-    var tile = new Tile(this.grid.randomAvailableCell(), value);
+    var tile = new Tile(this.grid.randomAvailableCell(), value, this.points[value]);
 
     this.grid.insertTile(tile);
   }
@@ -212,11 +213,14 @@ GameManager.prototype.move = function (direction) {
       {
         console.log("removed")
         this.word = column;
+        var score = 0;
         for (var y = 0; y < this.size; y++)
         {
-          self.grid.removeTile({x:x, y:y});
+          var cell = {x:x, y:y};
+          score += self.grid.cellContent(cell).point
+          self.grid.removeTile(cell);
         }
-        self.score += 100;
+        self.score += score*100;
       }
       console.log(column)
     }
@@ -238,11 +242,14 @@ GameManager.prototype.move = function (direction) {
       {
         console.log("removed")
         this.word = column;
+        var score = 0;
         for (var x = 0; x < this.size; x++)
         {
-          self.grid.removeTile({x:x, y:y});
+          var cell = {x:x, y:y};
+          score += self.grid.cellContent(cell).point
+          self.grid.removeTile(cell);
         }
-        self.score += 100;
+        self.score += score*100;
       }
       console.log(column);
     }
