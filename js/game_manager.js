@@ -6,7 +6,7 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.alphabet = "abcdefghijklmnopqrstuvwxyz"
   this.freq = [4467, 5629, 7175, 8574, 12829, 13490, 14592, 15915, 18496, 18659, 19541, 21909, 23210, 25424, 28225, 29518, 29602, 32645, 35028, 37409, 39290, 39756, 40441, 40630, 42235, 42485]
 
-  this.startTiles     = 2;
+  this.startTiles     = 5;
 
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
@@ -71,6 +71,7 @@ GameManager.prototype.addStartTiles = function () {
 GameManager.prototype.addRandomTile = function () {
   if (this.grid.cellsAvailable()) {
     //var value = Math.random() < 0.9 ? 2 : 4;
+
     var value = Math.random()*this.freq[this.freq.length-1];
     for (var i = 0; i < this.freq.length;i++)
     {
@@ -275,7 +276,8 @@ GameManager.prototype.move = function (direction) {
     });
   }
   if (moved) {
-    this.addRandomTile();
+    if (Math.random() < 0.33)
+        this.addRandomTile();
 
     if (!this.movesAvailable()) {
       this.over = true; // Game over!
@@ -337,6 +339,7 @@ GameManager.prototype.movesAvailable = function () {
 // Check for available matches between tiles (more expensive check)
 GameManager.prototype.tileMatchesAvailable = function () {
   return false;
+  
   var self = this;
 
   var tile;
