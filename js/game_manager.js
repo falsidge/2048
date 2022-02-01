@@ -238,6 +238,41 @@ GameManager.prototype.move = function (direction) {
       }
       console.log(column);
     }
+    traversals.x.forEach(function (x) {
+      traversals.y.forEach(function (y) {
+        cell = { x: x, y: y };
+        tile = self.grid.cellContent(cell);
+  
+        if (tile) {
+          var positions = self.findFarthestPosition(cell, vector);
+          var next      = self.grid.cellContent(positions.next);
+  
+          // Only one merger per row traversal?
+          if (false && next && next.value === tile.value && !next.mergedFrom) {
+            // var merged = new Tile(positions.next, tile.value * 2);
+            // merged.mergedFrom = [tile, next];
+  
+            // self.grid.insertTile(merged);
+            // self.grid.removeTile(tile);
+  
+            // // Converge the two tiles' positions
+            tile.updatePosition(positions.next);
+  
+            // // Update the score
+            // self.score += merged.value;
+  
+            // The mighty 2048 tile
+            if (merged.value === 2048) self.won = true;
+          } else {
+            self.moveTile(tile, positions.farthest);
+          }
+  
+          if (!self.positionsEqual(cell, tile)) {
+            moved = true; // The tile moved from its original cell!
+          }
+        }
+      });
+    });
   }
   if (moved) {
     this.addRandomTile();
@@ -301,6 +336,7 @@ GameManager.prototype.movesAvailable = function () {
 
 // Check for available matches between tiles (more expensive check)
 GameManager.prototype.tileMatchesAvailable = function () {
+  return false;
   var self = this;
 
   var tile;
