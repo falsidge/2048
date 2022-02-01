@@ -45,12 +45,15 @@ GameManager.prototype.setup = function () {
     this.over        = previousState.over;
     this.won         = previousState.won;
     this.keepPlaying = previousState.keepPlaying;
+    this.word = previousState.word;
+  
   } else {
     this.grid        = new Grid(this.size);
     this.score       = 0;
     this.over        = false;
     this.won         = false;
     this.keepPlaying = false;
+    this.word = "None";
 
     // Add the initial tiles
     this.addStartTiles();
@@ -105,7 +108,8 @@ GameManager.prototype.actuate = function () {
     over:       this.over,
     won:        this.won,
     bestScore:  this.storageManager.getBestScore(),
-    terminated: this.isGameTerminated()
+    terminated: this.isGameTerminated(),
+    word: this.word
   });
 
 };
@@ -117,7 +121,8 @@ GameManager.prototype.serialize = function () {
     score:       this.score,
     over:        this.over,
     won:         this.won,
-    keepPlaying: this.keepPlaying
+    keepPlaying: this.keepPlaying,
+    word: this.word
   };
 };
 
@@ -206,6 +211,7 @@ GameManager.prototype.move = function (direction) {
       if (words.has(column))
       {
         console.log("removed")
+        this.word = column;
         for (var y = 0; y < this.size; y++)
         {
           self.grid.removeTile({x:x, y:y});
@@ -231,6 +237,7 @@ GameManager.prototype.move = function (direction) {
       if (words.has(column))
       {
         console.log("removed")
+        this.word = column;
         for (var x = 0; x < this.size; x++)
         {
           self.grid.removeTile({x:x, y:y});
